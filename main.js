@@ -1,4 +1,10 @@
+/* ============================= */
+/*      PETALS                   */
+/* ============================= */
+
 const container = document.getElementById("petals");
+const isSmallScreen = window.matchMedia("(max-width: 600px)").matches;
+const petalInterval = isSmallScreen ? 600 : 350;
 
 function createPetal() {
 
@@ -22,7 +28,7 @@ function createPetal() {
         Math.random() * 2 + "s";
 
     petal.style.transform =
-        `rotate(${Math.random()*360}deg)`;
+        `rotate(${Math.random() * 360}deg)`;
 
     container.appendChild(petal);
 
@@ -32,69 +38,98 @@ function createPetal() {
 
 }
 
-for(let i = 0; i < 12; i++){
+for (let i = 0; i < 12; i++) {
     setTimeout(createPetal, i * 150);
 }
 
-setInterval(createPetal,350);
+setInterval(createPetal, petalInterval);
 
-const images = document.querySelectorAll(".images img");
-
-console.log(images);
-
-images.forEach(img => {
-
-    img.addEventListener("click", () => {
-
-        console.log("Clicked!");
-
-        img.classList.toggle("active");
-
-    });
-
-});
+/* ============================= */
+/*      BACKGROUND MUSIC         */
+/* ============================= */
 
 const music = document.getElementById("bgMusic");
 
-// Set volume
 music.volume = 0.25;
 
-// Wait until the audio is loaded before seeking
 music.addEventListener("loadedmetadata", () => {
-    music.currentTime = 40; // Start at 40 seconds
+    music.currentTime = 40;
 });
 
-// Play after the first click
 document.addEventListener("click", () => {
     music.play().catch(err => console.log(err));
 }, { once: true });
 
 /* ============================= */
-/*      IMAGE LIGHTBOX           */
+/*      IMAGE LIGHTBOX +         */
+/*      GALLERY CLICK HANDLING   */
 /* ============================= */
 
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightboxImg");
+const closeLightboxBtn = document.getElementById("closeLightbox");
 
+function openLightbox(img) {
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt || "";
+    lightbox.classList.add("show");
+}
+
+function closeLightbox() {
+    lightbox.classList.remove("show");
+}
+
+// Single click handler per image: toggles "active" state (used for
+// mobile hover-equivalent styling) and opens the lightbox.
 document.querySelectorAll("img").forEach(img => {
 
     img.addEventListener("click", () => {
 
-        lightboxImg.src = img.src;
-        lightbox.classList.add("show");
+        if (img.closest(".images")) {
+            img.classList.toggle("active");
+        }
+
+        openLightbox(img);
 
     });
 
 });
 
-lightbox.addEventListener("click", () => {
-    lightbox.classList.remove("show");
+lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+        closeLightbox();
+    }
+});
+
+closeLightboxBtn.addEventListener("click", closeLightbox);
+
+closeLightboxBtn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        closeLightbox();
+    }
 });
 
 document.addEventListener("keydown", e => {
-
-    if(e.key === "Escape"){
-        lightbox.classList.remove("show");
+    if (e.key === "Escape") {
+        closeLightbox();
     }
+});
 
+/* ============================= */
+/*      SCROLL TO TOP BUTTON     */
+/* ============================= */
+
+const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 500) {
+        scrollTopBtn.classList.add("show");
+    } else {
+        scrollTopBtn.classList.remove("show");
+    }
+});
+
+scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
 });
