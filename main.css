@@ -8,6 +8,171 @@ html {
     scroll-behavior: smooth;
 }
 
+html.locked,
+body.locked {
+    overflow: hidden;
+    height: 100%;
+}
+
+/* ============================= */
+/*      OPENING ENVELOPE SCREEN  */
+/* ============================= */
+
+.openingScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 34px;
+    padding: 30px;
+    text-align: center;
+    background: linear-gradient(135deg,
+            #ffd6ec,
+            #ffeef8,
+            #efd8ff,
+            #d8c8ff,
+            #f7d6ff);
+    background-size: 250% 250%;
+    animation: gradientBG 35s linear infinite;
+    transition: opacity .8s ease, visibility .8s ease;
+}
+
+.openingScreen.hideScreen {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.openingFlowers {
+    font-size: clamp(26px, 6vw, 42px);
+    letter-spacing: clamp(8px, 4vw, 22px);
+    opacity: .85;
+    filter: drop-shadow(0 0 18px rgba(255, 255, 255, .6));
+    animation: floatFlower 6s ease-in-out infinite;
+}
+
+.envelope {
+    position: relative;
+    width: 300px;
+    max-width: 78vw;
+    aspect-ratio: 3 / 2;
+    cursor: pointer;
+}
+
+.envelope:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 8px;
+    border-radius: 16px;
+}
+
+.envelopeBack {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #efd8ff, #ffd6ec);
+    border-radius: 16px;
+    box-shadow:
+        0 20px 55px rgba(120, 80, 180, .35),
+        0 0 0 1px rgba(255, 255, 255, .4) inset;
+    overflow: hidden;
+}
+
+.envelopePocket {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(200deg, rgba(255, 255, 255, .45), rgba(255, 255, 255, 0) 60%);
+    clip-path: polygon(0 100%, 50% 42%, 100% 100%);
+}
+
+.letterPaper {
+    position: absolute;
+    left: 50%;
+    bottom: 8%;
+    transform: translate(-50%, 0);
+    width: 82%;
+    height: 76%;
+    background: #fff9fc;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(120, 80, 180, .25);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    transition:
+        transform 1s cubic-bezier(.6, .05, .3, 1) .35s;
+}
+
+.letterPaperText {
+    color: #8f5cc5;
+    font-size: clamp(14px, 2.4vw, 18px);
+    font-style: italic;
+    text-shadow: none;
+}
+
+.envelopeFlap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 58%;
+    background: linear-gradient(160deg, #f2ddff, #ffd9ef);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transform: rotateX(0deg);
+    transition: transform .8s cubic-bezier(.6, .05, .3, 1);
+    z-index: 3;
+    backface-visibility: hidden;
+    filter: drop-shadow(0 6px 10px rgba(120, 80, 180, .2));
+}
+
+.envelopeSeal {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(26px, 5vw, 36px);
+    z-index: 4;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, .7));
+    transition: opacity .4s ease, transform .4s ease;
+}
+
+.envelope.opened .envelopeFlap {
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+.envelope.opened .envelopeSeal {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.5);
+}
+
+.envelope.opened .letterPaper {
+    transform: translate(-50%, -150%);
+}
+
+.openingHint {
+    color: white;
+    font-size: clamp(14px, 2.5vw, 18px);
+    text-shadow: 0 0 10px rgba(0, 0, 0, .15);
+    opacity: .9;
+    animation: pulseHint 2s ease-in-out infinite;
+}
+
+@keyframes pulseHint {
+
+    0%,
+    100% {
+        opacity: .55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
 /* ============================= */
 /*        IMAGE LIGHTBOX         */
 /* ============================= */
@@ -625,6 +790,10 @@ p {
         right: 18px;
         font-size: 20px;
     }
+
+    .envelope {
+        width: 260px;
+    }
 }
 
 /* Very small phones */
@@ -636,6 +805,14 @@ p {
 
     p, .textBox p, .letterContent p {
         font-size: 16px;
+    }
+
+    .envelope {
+        width: 220px;
+    }
+
+    .openingFlowers {
+        letter-spacing: 6px;
     }
 }
 
