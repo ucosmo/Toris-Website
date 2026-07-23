@@ -1,4 +1,44 @@
 /* ============================= */
+/*      OPENING ENVELOPE SCREEN  */
+/* ============================= */
+
+const openingScreen = document.getElementById("openingScreen");
+const envelope = document.getElementById("envelope");
+
+// Lock scrolling until the envelope is opened
+document.documentElement.classList.add("locked");
+document.body.classList.add("locked");
+
+function openEnvelope() {
+
+    if (envelope.classList.contains("opened")) return;
+
+    envelope.classList.add("opened");
+
+    // Fade the whole screen out once the flap + letter animation finishes
+    setTimeout(() => {
+        openingScreen.classList.add("hideScreen");
+        document.documentElement.classList.remove("locked");
+        document.body.classList.remove("locked");
+    }, 1300);
+
+    // Fully remove it from the DOM after the fade-out transition completes
+    setTimeout(() => {
+        openingScreen.remove();
+    }, 2200);
+
+}
+
+envelope.addEventListener("click", openEnvelope);
+
+envelope.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openEnvelope();
+    }
+});
+
+/* ============================= */
 /*      PETALS                   */
 /* ============================= */
 
@@ -50,7 +90,7 @@ setInterval(createPetal, petalInterval);
 
 const music = document.getElementById("bgMusic");
 
-music.volume = 0.25;
+music.volume = 0.4;
 
 music.addEventListener("loadedmetadata", () => {
     music.currentTime = 40;
